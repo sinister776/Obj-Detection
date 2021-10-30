@@ -64,7 +64,11 @@ ret = video.set(3,1280)
 ret = video.set(4,720)
 
 while(True):
-  pass
+    # Acquire frame and expand frame dimensions to have shape: [1, None, None, 3]
+    # i.e. a single-column array, where each item in the column has the pixel RGB value
+    ret, frame = video.read()
+    frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+    frame_expanded = np.expand_dims(frame_rgb, axis=0)
 
 # Clean up
 video.release()
