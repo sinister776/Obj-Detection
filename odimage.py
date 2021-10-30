@@ -74,4 +74,21 @@ image_expanded = np.expand_dims(image_rgb, axis=0)
     feed_dict={image_tensor: image_expanded})
 
 # Draw the results of the detection (aka 'visulaize the results')
+vis_util.visualize_boxes_and_labels_on_image_array(
+    image,
+    np.squeeze(boxes),
+    np.squeeze(classes).astype(np.int32),
+    np.squeeze(scores),
+    category_index,
+    use_normalized_coordinates=True,
+    line_thickness=8,
+    min_score_thresh=0.60)
 
+# All the results have been drawn on image. Now display the image.
+cv2.imshow('Object detector', image)
+
+# Press any key to close the image
+cv2.waitKey(0)
+
+# Clean up
+cv2.destroyAllWindows()
