@@ -69,6 +69,20 @@ while(True):
     ret, frame = video.read()
     frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
     frame_expanded = np.expand_dims(frame_rgb, axis=0)
+    detection_graph = tf.Graph()
+  with detection_graph.as_default():
+    od_graph_def = tf.GraphDef()
+    with tf.gfile.GFile(PATH_TO_CKPT, 'rb') as fid:
+        serialized_graph = fid.read()
+        od_graph_def.ParseFromString(serialized_graph)
+        tf.import_graph_def(od_graph_def, name='')
+
+    sess = tf.Session(graph=detection_graph)
+
+    # Perform the actual detection by running the model with the image as input
+    (boxes, scores, classes, num) = sess.run(
+        [detection_boxes, detection_scores, detection_classes, num_detections],
+        feed_dict={image_tensor: frame_expanded})
 
 # Clean up
 video.release()
